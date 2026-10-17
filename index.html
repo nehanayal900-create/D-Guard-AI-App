@@ -133,10 +133,15 @@ function submitReport() {
   document.getElementById("result").innerText =
     "✅ Report submitted successfully!";
 }
+const riskStatus = document.getElementById("riskStatus");
+
+if (riskStatus) {
+  riskStatus.innerText = "🟡 RISK STATUS: MONITORING";
+}
 </script>
   
   <div class="alert">
-<b>🟡 RISK STATUS: MONITORING</b>
+<b id="riskStatus">🟡 RISK STATUS: MONITORING</b>
 <p>Joshimath area is being monitored using live weather data.</p>
 <p><b>Note:</b> This is an informational risk indicator, not an official government warning.</p>
 </div>
