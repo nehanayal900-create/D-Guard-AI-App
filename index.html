@@ -111,29 +111,29 @@ button{
     <option>Other</option>
   </select><br><br>
 
-  <textarea id="message" placeholder="Describe the problem"></textarea><br><br>
+  <textarea id="message" placeholder="Write what happened"></textarea><br><br>
+
+  <h3>🎤 Voice Report</h3>
+
+  <button id="startVoice" onclick="startRecording()">
+    🎤 Start Recording
+  </button>
+
+  <button id="stopVoice" onclick="stopRecording()" disabled>
+    ⏹️ Stop
+  </button>
+
+  <p id="voiceStatus">No recording yet.</p>
+
+  <audio id="voicePlayback" controls
+         style="width:100%; display:none;"></audio>
+
+  <br><br>
 
   <button onclick="submitReport()">Submit Report</button>
 
   <p id="result"></p>
 </div>
-
-<script>
-function submitReport() {
-  let name = document.getElementById("name").value;
-  let type = document.getElementById("type").value;
-  let message = document.getElementById("message").value;
-
-  if (name === "" || message === "") {
-    document.getElementById("result").innerText =
-      "Please fill all required details.";
-    return;
-  }
-
-  document.getElementById("result").innerText =
-    "✅ Report submitted successfully!";
-}
-</script>
   <div class="alert">
 <b>🟡 RISK STATUS: MONITORING</b>
 <p>Joshimath area is being monitored using live weather data.</p>
