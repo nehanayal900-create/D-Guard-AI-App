@@ -127,10 +127,6 @@ button{
 
   <audio id="voicePlayback" controls
          style="width:100%; display:none;"></audio>
-
-  <br><br>
-
-  <button onclick="submitReport()">Submit Report</button>
     let mediaRecorder;
 let audioChunks = [];
 
@@ -163,31 +159,7 @@ async function startRecording() {
       document.getElementById("voiceStatus").innerText =
         "✅ Voice recording ready";
 
-      stream.getTracks().forEach(track => track.stop());
-    };
-
-    mediaRecorder.start();
-
-    document.getElementById("startVoice").disabled = true;
-    document.getElementById("stopVoice").disabled = false;
-
-    document.getElementById("voiceStatus").innerText =
-      "🔴 Recording...";
-      
-  } catch (error) {
-    document.getElementById("voiceStatus").innerText =
-      "❌ Microphone permission not allowed";
-  }
-}
-
-function stopRecording() {
-  if (mediaRecorder && mediaRecorder.state === "recording") {
-    mediaRecorder.stop();
-
-    document.getElementById("startVoice").disabled = false;
-    document.getElementById("stopVoice").disabled = true;
-  }
-}
+      stream.getTracks().forEach(track => track.stop
 
   <p id="result"></p>
 </div>
