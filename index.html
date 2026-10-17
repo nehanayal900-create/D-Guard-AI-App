@@ -145,52 +145,6 @@ button{
 </div>
 
 <script>
-let mediaRecorder;
-let audioChunks = [];
-
-async function startRecording() {
-  const stream = await navigator.mediaDevices.getUserMedia({audio: true});
-
-  audioChunks = [];
-  mediaRecorder = new MediaRecorder(stream);
-
-  mediaRecorder.ondataavailable = function(event) {
-    audioChunks.push(event.data);
-  };
-
-  mediaRecorder.onstop = function() {
-    const audioBlob = new Blob(audioChunks, {
-      type: "audio/webm"
-    });
-
-    const audioUrl = URL.createObjectURL(audioBlob);
-
-    const player = document.getElementById("voicePlayback");
-    player.src = audioUrl;
-    player.style.display = "block";
-
-    document.getElementById("voiceStatus").innerText =
-      "✅ Voice recording ready";
-
-    stream.getTracks().forEach(track => track.stop());
-  };
-
-  mediaRecorder.start();
-
-  document.getElementById("startVoice").disabled = true;
-  document.getElementById("stopVoice").disabled = false;
-
-  document.getElementById("voiceStatus").innerText =
-    "🔴 Recording...";
-}
-
-function stopRecording() {
-  if (mediaRecorder) {
-    mediaRecorder.stop();
-    document.getElementById("startVoice").disabled = false;
-    document.getElementById("stopVoice").disabled = true;
-  }
-}
 fetch("https://api.open-meteo.com/v1/forecast?latitude=30.56&longitude=79.56&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m")
 
 .then(response => response.json())
@@ -221,7 +175,60 @@ document.getElementById("rain").innerText = "Unavailable";
 document.getElementById("wind").innerText = "Unavailable";
 
 });
+let mediaRecorder;
+let audioChunks = [];
 
+async function startRecording() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+    audioChunks = [];
+    mediaRecorder = new MediaRecorder(stream);
+
+    mediaRecorder.ondataavailable = function(event) {
+      if (event.data.size > 0) {
+        audioChunks.push(event.data);
+      }
+    };
+
+    mediaRecorder.onstop = function() {
+      const audioBlob = new Blob(audioChunks, {
+        type: "audio/webm"
+      });
+
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      const player = document.getElementById("voicePlayback");
+      player.src = audioUrl;
+      player.style.display = "block";
+
+      document.getElementById("voiceStatus").innerText =
+        "✅ Voice recording ready";
+
+      stream.getTracks().forEach(function(track) {
+        track.stop();
+      });
+    };
+
+    mediaRecorder.start();
+
+    document.getElementById("startVoice").disabled = true;
+    document.getElementById("stopVoice").disabled = false;
+    document.getElementById("voiceStatus").innerText = "🔴 Recording...";
+
+  } catch (error) {
+    document.getElementById("voiceStatus").innerText =
+      "❌ Microphone permission denied";
+  }
+}
+
+function stopRecording() {
+  if (mediaRecorder && mediaRecorder.state === "recording") {
+    mediaRecorder.stop();
+    document.getElementById("startVoice").disabled = false;
+    document.getElementById("stopVoice").disabled = true;
+  }
+}
 </script>
 
 </body>
