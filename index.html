@@ -131,35 +131,48 @@ button{
 let audioChunks = [];
 
 async function startRecording() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: true
+  const stream = await navigator.mediaDevices.getUserMedia({audio: true});
+
+  audioChunks = [];
+  mediaRecorder = new MediaRecorder(stream);
+
+  mediaRecorder.ondataavailable = function(event) {
+    audioChunks.push(event.data);
+  };
+
+  mediaRecorder.onstop = function() {
+    const audioBlob = new Blob(audioChunks, {
+      type: "audio/webm"
     });
 
-    audioChunks = [];
-    mediaRecorder = new MediaRecorder(stream);
+    const audioUrl = URL.createObjectURL(audioBlob);
 
-    mediaRecorder.ondataavailable = function(event) {
-      if (event.data.size > 0) {
-        audioChunks.push(event.data);
-      }
-    };
+    const player = document.getElementById("voicePlayback");
+    player.src = audioUrl;
+    player.style.display = "block";
 
-    mediaRecorder.onstop = function() {
-      const audioBlob = new Blob(audioChunks, {
-        type: "audio/webm"
-      });
+    document.getElementById("voiceStatus").innerText =
+      "✅ Voice recording ready";
 
-      const audioUrl = URL.createObjectURL(audioBlob);
+    stream.getTracks().forEach(track => track.stop());
+  };
 
-      const player = document.getElementById("voicePlayback");
-      player.src = audioUrl;
-      player.style.display = "block";
+  mediaRecorder.start();
 
-      document.getElementById("voiceStatus").innerText =
-        "✅ Voice recording ready";
+  document.getElementById("startVoice").disabled = true;
+  document.getElementById("stopVoice").disabled = false;
 
-      stream.getTracks().forEach(track => track.stop
+  document.getElementById("voiceStatus").innerText =
+    "🔴 Recording...";
+}
+
+function stopRecording() {
+  if (mediaRecorder) {
+    mediaRecorder.stop();
+    document.getElementById("startVoice").disabled = false;
+    document.getElementById("stopVoice").disabled = true;
+  }
+}  
 
   <p id="result"></p>
 </div>
