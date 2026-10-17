@@ -138,6 +138,20 @@ const riskStatus = document.getElementById("riskStatus");
 if (riskStatus) {
   riskStatus.innerText = "🟡 RISK STATUS: MONITORING";
 }
+const reportButton = document.querySelector("button");
+
+if (reportButton) {
+  reportButton.addEventListener("click", function() {
+    const name = document.getElementById("name");
+    const result = document.getElementById("result");
+
+    if (name && name.value.trim() !== "") {
+      result.innerText = "✅ Report submitted successfully!";
+    } else {
+      result.innerText = "⚠️ Please enter your name.";
+    }
+  });
+}
 </script>
   
   <div class="alert">
