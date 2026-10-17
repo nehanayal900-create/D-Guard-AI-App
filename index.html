@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>D-Guard AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+  <h1>D-Guard AI</h1>
+  <h2>Disaster Management App</h2>
+
+  <p>📍 Location: Joshimath, Uttarakhand</p>
+
+  <h3>🌦️ Live Weather</h3>
+  <p id="weather">Loading...</p>
+
+  <script>
+    fetch("https://api.open-meteo.com/v1/forecast?latitude=30.56&longitude=79.56&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m")
+      .then(response => response.json())
+      .then(data => {
+        const w = data.current;
+
+        document.getElementById("weather").innerHTML =
+          "Temperature: " + w.temperature_2m + " °C<br>" +
+          "Humidity: " + w.relative_humidity_2m + " %<br>" +
+          "Rain: " + w.precipitation + " mm<br>" +
+          "Wind: " + w.wind_speed_10m + " km/h";
+      })
+      .catch(() => {
+        document.getElementById("weather").innerText =
+          "Weather data unavailable";
+      });
+  </script>
+
+</body>
+</html>
