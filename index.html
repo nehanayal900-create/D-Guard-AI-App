@@ -127,7 +127,25 @@ button{
 
   <audio id="voicePlayback" controls
          style="width:100%; display:none;"></audio>
-    let mediaRecorder;
+  <p id="result"></p>
+</div>
+  <div class="alert">
+<b>🟡 RISK STATUS: MONITORING</b>
+<p>Joshimath area is being monitored using live weather data.</p>
+<p><b>Note:</b> This is an informational risk indicator, not an official government warning.</p>
+</div>
+</div>
+
+<div class="card">
+<h2>📞 Emergency Help</h2>
+<p>Emergency: <b>112</b></p>
+<p>Disaster Management: <b>1070</b></p>
+</div>
+
+</div>
+
+<script>
+let mediaRecorder;
 let audioChunks = [];
 
 async function startRecording() {
@@ -172,27 +190,7 @@ function stopRecording() {
     document.getElementById("startVoice").disabled = false;
     document.getElementById("stopVoice").disabled = true;
   }
-}  
-
-  <p id="result"></p>
-</div>
-  <div class="alert">
-<b>🟡 RISK STATUS: MONITORING</b>
-<p>Joshimath area is being monitored using live weather data.</p>
-<p><b>Note:</b> This is an informational risk indicator, not an official government warning.</p>
-</div>
-</div>
-
-<div class="card">
-<h2>📞 Emergency Help</h2>
-<p>Emergency: <b>112</b></p>
-<p>Disaster Management: <b>1070</b></p>
-</div>
-
-</div>
-
-<script>
-
+}
 fetch("https://api.open-meteo.com/v1/forecast?latitude=30.56&longitude=79.56&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m")
 
 .then(response => response.json())
