@@ -1,36 +1,151 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>D-Guard AI</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D-Guard AI</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f1f5f9;
+  color:#172033;
+}
+header{
+  background:#172033;
+  color:white;
+  padding:20px;
+  text-align:center;
+}
+header h1{margin:0;}
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+}
+.card{
+  background:white;
+  padding:20px;
+  margin:15px 0;
+  border-radius:15px;
+  box-shadow:0 3px 10px #0002;
+}
+.weather{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+.box{
+  padding:15px;
+  background:#eef2ff;
+  border-radius:10px;
+}
+.alert{
+  background:#fff3cd;
+  padding:15px;
+  border-radius:10px;
+}
+button{
+  padding:12px 20px;
+  border:0;
+  border-radius:8px;
+  cursor:pointer;
+}
+</style>
 </head>
+
 <body>
 
-  <h1>D-Guard AI</h1>
-  <h2>Disaster Management App</h2>
+<header>
+<h1>🛡️ D-Guard AI</h1>
+<p>Disaster Management & Risk Monitoring System</p>
+</header>
 
-  <p>📍 Location: Joshimath, Uttarakhand</p>
+<div class="container">
 
-  <h3>🌦️ Live Weather</h3>
-  <p id="weather">Loading...</p>
+<div class="card">
+<h2>📍 Joshimath, Uttarakhand</h2>
+<p>Real-time disaster monitoring dashboard</p>
+</div>
 
-  <script>
-    fetch("https://api.open-meteo.com/v1/forecast?latitude=30.56&longitude=79.56&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m")
-      .then(response => response.json())
-      .then(data => {
-        const w = data.current;
+<div class="card">
+<h2>🌦️ Live Weather</h2>
 
-        document.getElementById("weather").innerHTML =
-          "Temperature: " + w.temperature_2m + " °C<br>" +
-          "Humidity: " + w.relative_humidity_2m + " %<br>" +
-          "Rain: " + w.precipitation + " mm<br>" +
-          "Wind: " + w.wind_speed_10m + " km/h";
-      })
-      .catch(() => {
-        document.getElementById("weather").innerText =
-          "Weather data unavailable";
-      });
-  </script>
+<div class="weather">
+
+<div class="box">
+🌡️ Temperature
+<h3 id="temp">Loading...</h3>
+</div>
+
+<div class="box">
+💧 Humidity
+<h3 id="humidity">Loading...</h3>
+</div>
+
+<div class="box">
+🌧️ Rain
+<h3 id="rain">Loading...</h3>
+</div>
+
+<div class="box">
+💨 Wind
+<h3 id="wind">Loading...</h3>
+</div>
+
+</div>
+</div>
+
+<div class="card">
+<h2>🚨 Risk Status</h2>
+<div class="alert">
+<b>Monitoring Active</b>
+<p>Weather conditions are being monitored using live data.</p>
+</div>
+</div>
+
+<div class="card">
+<h2>📞 Emergency Help</h2>
+<p>Emergency: <b>112</b></p>
+<p>Disaster Management: <b>1070</b></p>
+</div>
+
+</div>
+
+<script>
+
+fetch("https://api.open-meteo.com/v1/forecast?latitude=30.56&longitude=79.56&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m")
+
+.then(response => response.json())
+
+.then(data => {
+
+let w = data.current;
+
+document.getElementById("temp").innerText =
+w.temperature_2m + " °C";
+
+document.getElementById("humidity").innerText =
+w.relative_humidity_2m + " %";    
+
+document.getElementById("rain").innerText =
+w.precipitation + " mm";
+
+document.getElementById("wind").innerText =
+w.wind_speed_10m + " km/h";
+
+})
+
+.catch(() => {
+
+document.getElementById("temp").innerText = "Unavailable";
+document.getElementById("humidity").innerText = "Unavailable";
+document.getElementById("rain").innerText = "Unavailable";
+document.getElementById("wind").innerText = "Unavailable";
+
+});
+
+</script>
 
 </body>
 </html>
