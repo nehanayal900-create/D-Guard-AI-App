@@ -1,270 +1,718 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
 <title>D-Guard AI</title>
 
+<!-- Leaflet Map -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
 <style>
+
+*{
+  box-sizing:border-box;
+}
+
 body{
   margin:0;
-  font-family:Arial,sans-serif;
-  background:#f1f5f9;
+  font-family:Arial, sans-serif;
+  background:#eef3f8;
   color:#172033;
 }
 
+/* TOP HEADER */
+
 header{
-  background:#172033;
+  background:linear-gradient(135deg,#172033,#263b63);
   color:white;
-  padding:20px;
+  padding:25px 20px;
   text-align:center;
+  border-radius:0 0 25px 25px;
+  box-shadow:0 5px 20px #0003;
+}
+
+.logo{
+  font-size:34px;
+  margin-bottom:5px;
 }
 
 header h1{
   margin:0;
+  font-size:28px;
 }
+
+header p{
+  margin:7px 0 0;
+  opacity:.85;
+}
+
+/* MAIN */
 
 .container{
   max-width:900px;
   margin:auto;
-  padding:20px;
+  padding:15px;
 }
+
+/* CARDS */
 
 .card{
   background:white;
   padding:20px;
   margin:15px 0;
-  border-radius:15px;
-  box-shadow:0 3px 10px #0002;
+  border-radius:20px;
+  box-shadow:0 5px 18px #00000012;
 }
+
+.card h2{
+  margin-top:0;
+}
+
+/* LOCATION */
+
+.location-card{
+  background:linear-gradient(135deg,#ffffff,#eef5ff);
+}
+
+.location{
+  font-size:20px;
+  font-weight:bold;
+}
+
+.live{
+  display:inline-block;
+  margin-top:8px;
+  padding:6px 12px;
+  background:#dcfce7;
+  color:#166534;
+  border-radius:20px;
+  font-size:13px;
+  font-weight:bold;
+}
+
+/* WEATHER */
 
 .weather{
   display:grid;
   grid-template-columns:repeat(2,1fr);
-  gap:10px;
+  gap:12px;
 }
 
-.box{
-  padding:15px;
-  background:#eef2ff;
+.weather-box{
+  padding:18px;
+  border-radius:17px;
+  background:#f4f7ff;
+  border:1px solid #e3e9f5;
+}
+
+.weather-icon{
+  font-size:28px;
+}
+
+.weather-label{
+  color:#64748b;
+  font-size:14px;
+  margin-top:5px;
+}
+
+.weather-value{
+  font-size:23px;
+  font-weight:bold;
+  margin-top:6px;
+}
+
+.weather-status{
+  margin-top:15px;
+  padding:10px;
+  background:#f1f5f9;
   border-radius:10px;
+  font-size:13px;
 }
 
-.alert{
+/* RISK */
+
+.risk-card{
+  background:linear-gradient(135deg,#fff8df,#fff);
+}
+
+.risk{
+  padding:18px;
+  border-radius:15px;
   background:#fff3cd;
-  padding:15px;
+  color:#664d03;
+}
+
+.risk-title{
+  font-size:20px;
+  font-weight:bold;
+}
+
+/* REPORT */
+
+input,
+select,
+textarea{
+  width:100%;
+  padding:13px;
+  margin-top:7px;
+  border:1px solid #d6dce5;
   border-radius:10px;
+  font-size:15px;
+}
+
+textarea{
+  min-height:100px;
+  resize:vertical;
 }
 
 button{
-  padding:12px 20px;
+  padding:13px 20px;
   border:0;
-  border-radius:8px;
+  border-radius:12px;
+  background:#172033;
+  color:white;
+  font-size:15px;
+  font-weight:bold;
   cursor:pointer;
 }
+
+button:active{
+  transform:scale(.98);
+}
+
+/* EMERGENCY */
+
+.emergency-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.emergency-button{
+  display:block;
+  text-decoration:none;
+  text-align:center;
+  padding:15px;
+  border-radius:14px;
+  background:#f1f5f9;
+  color:#172033;
+  font-weight:bold;
+}
+
+/* MAP */
+
+#joshimathMap{
+  height:360px;
+  width:100%;
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid #dbe2ea;
+}
+
+/* ALERT */
+
+.alert-source{
+  padding:16px;
+  background:#eef6ff;
+  border-radius:14px;
+  border-left:5px solid #2563eb;
+}
+
+/* SAFETY */
+
+.safety{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+
+.safety-box{
+  padding:16px;
+  border-radius:15px;
+  background:#f8fafc;
+}
+
+.safety-box h3{
+  margin-top:0;
+}
+
+/* FOOTER */
+
+footer{
+  text-align:center;
+  padding:25px 15px;
+  color:#64748b;
+  font-size:13px;
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+  .container{
+    padding:10px;
+  }
+
+  .weather{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .safety{
+    grid-template-columns:1fr;
+  }
+
+  .emergency-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  #joshimathMap{
+    height:300px;
+  }
+
+}
+
 </style>
+
 </head>
+
 
 <body>
 
+
+<!-- HEADER -->
+
 <header>
-<h1>🛡️ D-Guard AI</h1>
+
+<div class="logo">🛡️</div>
+
+<h1>D-Guard AI</h1>
+
 <p>Disaster Management & Risk Monitoring System</p>
+
 </header>
+
 
 <div class="container">
 
-<div class="card">
+
+<!-- LOCATION -->
+
+<div class="card location-card">
+
 <h2>📍 Joshimath, Uttarakhand</h2>
-<p>Real-time disaster monitoring dashboard</p>
+
+<div class="location">
+Joshimath Disaster Monitoring
 </div>
 
+<span class="live">
+● LIVE MONITORING
+</span>
+
+<p>
+Monitoring weather conditions and disaster-related information
+for the Joshimath area.
+</p>
+
+</div>
+
+
 <!-- LIVE WEATHER -->
+
 <div class="card">
-<h2>🌦️ Live Weather — Joshimath</h2>
+
+<h2>🌦️ Live Weather</h2>
 
 <div class="weather">
 
-<div class="box">
-🌡️ Temperature
-<h3 id="temp">Loading...</h3>
+
+<div class="weather-box">
+
+<div class="weather-icon">
+🌡️
 </div>
 
-<div class="box">
-💧 Humidity
-<h3 id="humidity">Loading...</h3>
+<div class="weather-label">
+Temperature
 </div>
 
-<div class="box">
-🌧️ Rain
-<h3 id="rain">Loading...</h3>
+<div
+  class="weather-value"
+  id="temp"
+>
+Loading...
 </div>
-
-<div class="box">
-💨 Wind
-<h3 id="wind">Loading...</h3>
-</div>
-
-</div>
-
-<p id="weatherCondition">Checking current weather...</p>
 
 </div>
 
-<!-- RISK STATUS -->
-<div class="card">
+
+<div class="weather-box">
+
+<div class="weather-icon">
+💧
+</div>
+
+<div class="weather-label">
+Humidity
+</div>
+
+<div
+  class="weather-value"
+  id="humidity"
+>
+Loading...
+</div>
+
+</div>
+
+
+<div class="weather-box">
+
+<div class="weather-icon">
+🌧️
+</div>
+
+<div class="weather-label">
+Rain / Precipitation
+</div>
+
+<div
+  class="weather-value"
+  id="rain"
+>
+Loading...
+</div>
+
+</div>
+
+
+<div class="weather-box">
+
+<div class="weather-icon">
+💨
+</div>
+
+<div class="weather-label">
+Wind Speed
+</div>
+
+<div
+  class="weather-value"
+  id="wind"
+>
+Loading...
+</div>
+
+</div>
+
+
+</div>
+
+
+<div
+  class="weather-status"
+  id="weatherStatus"
+>
+🔄 Connecting to Open-Meteo...
+</div>
+
+</div>
+
+
+<!-- RISK -->
+
+<div class="card risk-card">
+
 <h2>🚨 Risk Status</h2>
 
-<div class="alert">
-<b id="riskStatus">🟡 RISK STATUS: MONITORING</b>
+<div class="risk">
 
-<p>Joshimath area is being monitored using live weather data.</p>
+<div
+  class="risk-title"
+  id="riskStatus"
+>
+🟡 MONITORING
+</div>
 
 <p>
-<b>Note:</b> This is an informational risk indicator,
-not an official government warning.
+Joshimath is currently being monitored using live weather information.
 </p>
+
+<p>
+<b>Important:</b> This is an informational indicator and is not an
+official government warning.
+</p>
+
 </div>
 
 </div>
+
+
+<!-- GOVERNMENT ALERT -->
+
+<div class="card">
+
+<h2>🚨 Government Disaster Alerts</h2>
+
+<div class="alert-source">
+
+<b>NDMA SACHET</b>
+
+<p id="alertStatus">
+Live government alert connection is being prepared.
+</p>
+
+<p>
+Official disaster alerts should always be verified through NDMA SACHET
+and local authorities.
+</p>
+
+</div>
+
+</div>
+
 
 <!-- REPORT -->
+
 <div class="card">
 
 <h2>📝 Report a Disaster</h2>
 
-<input id="name" placeholder="Your name">
-<br><br>
+<p>
+Report a disaster-related situation in your area.
+</p>
+
+
+<label>
+Your Name
+</label>
+
+<input
+  id="name"
+  type="text"
+  placeholder="Enter your name"
+>
+
+
+<br>
+
+
+<label>
+Disaster Type
+</label>
 
 <select id="type">
+
 <option>Heavy Rain</option>
+
 <option>Landslide</option>
+
 <option>Flood</option>
+
 <option>Earthquake</option>
+
+<option>Land Subsidence</option>
+
 <option>Other</option>
+
 </select>
 
+
+<br>
+
+
+<label>
+Description
+</label>
+
+<textarea
+  id="message"
+  placeholder="Describe the problem..."
+></textarea>
+
+
 <br><br>
 
-<textarea id="message" placeholder="Describe the problem"></textarea>
-
-<br><br>
-
-<button onclick="submitReport()">Submit Report</button>
+<button onclick="submitReport()">
+Submit Report
+</button>
 
 <p id="result"></p>
 
 </div>
 
+
 <!-- EMERGENCY -->
+
 <div class="card">
 
 <h2>📞 Emergency Help</h2>
 
-<p>
-Emergency:
-<a href="tel:112"><b>📞 112</b></a>
-</p>
+<div class="emergency-grid">
 
-<p>
-Disaster Management:
-<a href="tel:1070"><b>📞 1070</b></a>
-</p>
+<a
+  class="emergency-button"
+  href="tel:112"
+>
+🚨 112<br>
+Emergency
+</a>
+
+
+<a
+  class="emergency-button"
+  href="tel:1070"
+>
+📞 1070<br>
+Disaster Management
+</a>
+
+</div>
 
 </div>
 
-<!-- ALERT -->
-<div class="card">
-
-<h2>🚨 Government Alert Source</h2>
-
-<p id="alertStatus">
-NDMA SACHET alert source connected.
-</p>
-
-</div>
 
 <!-- MAP -->
-<h2>🗺️ Joshimath Map</h2>
 
 <div class="card">
 
-<iframe
-src="https://www.openstreetmap.org/export/embed.html?bbox=79.52%2C30.52%2C79.60%2C30.59&layer=mapnik&marker=30.56%2C79.56"
-width="100%"
-height="300"
-style="border:1px solid #ccc;border-radius:10px;">
-</iframe>
+<h2>🗺️ Joshimath Interactive Map</h2>
+
+<p>
+📍 Interactive map of the Joshimath monitoring area.
+</p>
+
+<div id="joshimathMap"></div>
+
+<p id="mapStatus">
+📍 Joshimath location loaded.
+</p>
 
 </div>
 
-<!-- SAFETY TIPS -->
+
+<!-- SAFETY -->
+
 <h2>🛡️ Safety Tips</h2>
 
-<div class="card">
+
+<div class="safety">
+
+
+<div class="safety-box">
 
 <h3>🌧️ Heavy Rain</h3>
 
-<p>• सुरक्षित जगह पर रहें।</p>
-<p>• तेज बहाव वाले पानी से दूर रहें।</p>
+<p>
+Stay in a safe place and avoid fast-flowing water.
+</p>
 
 </div>
 
-<div class="card">
+
+<div class="safety-box">
 
 <h3>⛰️ Landslide</h3>
 
-<p>• पहाड़ी ढलानों और कमजोर जगहों से दूर रहें।</p>
-<p>• पत्थर गिरने वाले क्षेत्रों में न जाएँ।</p>
+<p>
+Stay away from unstable slopes and areas where rocks may fall.
+</p>
 
 </div>
 
-<div class="card">
+
+<div class="safety-box">
 
 <h3>🌎 Earthquake</h3>
 
-<p>• शांत रहें और मजबूत जगह पर सुरक्षित रहें।</p>
-<p>• बिजली और गैस की स्थिति सुरक्षित होने पर जाँचें।</p>
+<p>
+Stay calm and move to a safe location away from hazards.
+</p>
 
 </div>
 
+
 </div>
+
+
+</div>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+🛡️ D-Guard AI<br>
+
+Joshimath Disaster Management & Risk Monitoring System
+
+</footer>
+
+
+
+<!-- LEAFLET -->
+
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
 
 <script>
 
-// ===============================
-// LIVE OPEN-METEO WEATHER
-// ===============================
+/* =====================================
+   LIVE OPEN-METEO WEATHER
+===================================== */
 
 async function loadWeather(){
 
   try{
 
     const response = await fetch(
-      "https://api.open-meteo.com/v1/forecast?latitude=30.56&longitude=79.56&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code&timezone=Asia%2FKolkata"
+      "https://api.open-meteo.com/v1/forecast?latitude=30.56&longitude=79.56&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m&timezone=Asia%2FKolkata"
     );
 
     if(!response.ok){
+
       throw new Error("Weather API error");
+
     }
 
     const data = await response.json();
 
-    const w = data.current;
+    const weather = data.current;
+
 
     document.getElementById("temp").innerText =
-      w.temperature_2m + " °C";
+      weather.temperature_2m + " °C";
+
 
     document.getElementById("humidity").innerText =
-      w.relative_humidity_2m + " %";
+      weather.relative_humidity_2m + " %";
+
 
     document.getElementById("rain").innerText =
-      w.precipitation + " mm";
+      weather.precipitation + " mm";
+
 
     document.getElementById("wind").innerText =
-      w.wind_speed_10m + " km/h";
+      weather.wind_speed_10m + " km/h";
 
-    document.getElementById("weatherCondition").innerText =
-      "🌦️ Current weather data received from Open-Meteo.";
+
+    document.getElementById("weatherStatus").innerText =
+      "✅ Live weather data received from Open-Meteo.";
+
 
   }
 
@@ -282,17 +730,18 @@ async function loadWeather(){
     document.getElementById("wind").innerText =
       "Unavailable";
 
-    document.getElementById("weatherCondition").innerText =
-      "⚠️ Weather data unavailable.";
+    document.getElementById("weatherStatus").innerText =
+      "⚠️ Live weather data unavailable.";
 
   }
 
 }
 
 
-// ===============================
-// DISASTER REPORT
-// ===============================
+
+/* =====================================
+   DISASTER REPORT
+===================================== */
 
 function submitReport(){
 
@@ -308,6 +757,7 @@ function submitReport(){
   const result =
     document.getElementById("result");
 
+
   if(name === "" || message === ""){
 
     result.innerText =
@@ -317,17 +767,66 @@ function submitReport(){
 
   }
 
+
   result.innerText =
-    "✅ Report submitted successfully!";
+    "✅ " + type + " report submitted successfully.";
 
 }
 
 
-// START WEATHER
+
+/* =====================================
+   INTERACTIVE JOSHIMATH MAP
+===================================== */
+
+const map =
+  L.map("joshimathMap").setView(
+    [30.56,79.56],
+    13
+  );
+
+
+L.tileLayer(
+  "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+  {
+
+    maxZoom:19,
+
+    attribution:
+      "© OpenStreetMap contributors"
+
+  }
+).addTo(map);
+
+
+const marker =
+  L.marker(
+    [30.56,79.56]
+  ).addTo(map);
+
+
+marker.bindPopup(
+
+  "<b>📍 Joshimath</b><br>" +
+  "Uttarakhand<br>" +
+  "D-Guard AI Monitoring Area"
+
+).openPopup();
+
+
+document.getElementById(
+  "mapStatus"
+).innerText =
+  "📍 Joshimath monitoring location active.";
+
+
+
+/* START WEATHER */
 
 loadWeather();
 
 </script>
+
 
 </body>
 </html>
