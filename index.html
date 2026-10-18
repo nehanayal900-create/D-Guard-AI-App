@@ -6,16 +6,15 @@
 
 <title>D-Guard AI</title>
 
-<!-- Leaflet -->
 <link rel="stylesheet"
-href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
 *{
   box-sizing:border-box;
   margin:0;
   padding:0;
-  font-family:Arial, sans-serif;
+  font-family:Arial,sans-serif;
 }
 
 body{
@@ -47,7 +46,6 @@ body{
   background:rgba(255,255,255,.12);
   padding:12px;
   border-radius:14px;
-  font-size:14px;
 }
 
 .container{
@@ -69,6 +67,8 @@ body{
   margin-bottom:16px;
   box-shadow:0 5px 18px rgba(20,40,70,.09);
 }
+
+/* WEATHER */
 
 .weather-grid{
   display:grid;
@@ -100,30 +100,57 @@ body{
   margin-top:5px;
 }
 
-.status{
+/* EARLY WARNING */
+
+.warning-card{
+  border:2px solid #e3a900;
+  background:#fffaf0;
+}
+
+.warning-header{
   display:flex;
   align-items:center;
   gap:12px;
 }
 
-.status-dot{
-  width:15px;
-  height:15px;
-  border-radius:50%;
-  background:#e5a400;
-  box-shadow:0 0 0 5px #fff3c7;
+.warning-icon{
+  font-size:35px;
 }
 
-.status h3{
-  color:#9a6800;
-  margin-bottom:4px;
+.warning-title{
+  font-size:22px;
+  font-weight:bold;
+  color:#8a6100;
 }
 
-.small{
-  font-size:12px;
-  color:#687386;
-  line-height:1.5;
+.warning-text{
+  margin-top:12px;
+  line-height:1.6;
+  font-size:14px;
 }
+
+.risk-bar{
+  height:13px;
+  background:#e5e7eb;
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:15px;
+}
+
+.risk-fill{
+  height:100%;
+  width:25%;
+  background:#20a45a;
+  transition:.5s;
+}
+
+.risk-level{
+  margin-top:10px;
+  font-weight:bold;
+  font-size:18px;
+}
+
+/* ALERTS */
 
 .alert-head{
   display:flex;
@@ -170,10 +197,31 @@ body{
   margin-top:8px;
 }
 
-#alertList{
-  max-height:480px;
-  overflow-y:auto;
+.small{
+  font-size:12px;
+  color:#687386;
+  line-height:1.5;
 }
+
+.loading{
+  text-align:center;
+  padding:20px;
+  color:#687386;
+}
+
+.error{
+  background:#fff4f4;
+  color:#a52b2b;
+  border-left:4px solid #d83a3a;
+}
+
+.success{
+  background:#effaf3;
+  color:#176b3b;
+  border-left:4px solid #269454;
+}
+
+/* MAP */
 
 .map{
   width:100%;
@@ -181,6 +229,8 @@ body{
   border-radius:18px;
   overflow:hidden;
 }
+
+/* FORM */
 
 .form-group{
   margin-bottom:13px;
@@ -221,6 +271,8 @@ button{
   color:white;
 }
 
+/* EMERGENCY */
+
 .emergency-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -244,6 +296,8 @@ button{
   background:#075b82;
 }
 
+/* TIPS */
+
 .tips{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -266,25 +320,8 @@ button{
   line-height:1.6;
 }
 
-.loading{
-  text-align:center;
-  padding:20px;
-  color:#687386;
-}
-
-.error{
-  background:#fff4f4;
-  color:#a52b2b;
-  border-left:4px solid #d83a3a;
-}
-
-.success{
-  background:#effaf3;
-  color:#176b3b;
-  border-left:4px solid #269454;
-}
-
 @media(max-width:600px){
+
   .weather-grid{
     grid-template-columns:repeat(2,1fr);
   }
@@ -307,664 +344,976 @@ button{
 <body>
 
 <!-- HEADER -->
-<div class="header">
-  <h1>🛡️ D-Guard AI</h1>
-  <p>Disaster Management & Risk Monitoring System</p>
 
-  <div class="location">
-    📍 <b>Monitoring Area:</b> Joshimath, Uttarakhand
-  </div>
+<div class="header">
+
+<h1>🛡️ D-Guard AI</h1>
+
+<p>
+Disaster Management & Risk Monitoring System
+</p>
+
+<div class="location">
+📍 <b>Monitoring Area:</b>
+Joshimath, Uttarakhand
 </div>
+
+</div>
+
 
 <div class="container">
 
-<!-- WEATHER -->
-<h2 class="section-title">🌦️ Live Weather</h2>
+
+<!-- LIVE WEATHER -->
+
+<h2 class="section-title">
+🌦️ Live Weather
+</h2>
 
 <div class="card">
 
-  <div class="weather-grid">
+<div class="weather-grid">
 
-    <div class="weather-box">
-      <div class="weather-icon">🌡️</div>
-      <div id="temp" class="weather-value">--</div>
-      <div class="weather-label">Temperature</div>
-    </div>
+<div class="weather-box">
+<div class="weather-icon">🌡️</div>
+<div id="temp" class="weather-value">--</div>
+<div class="weather-label">Temperature</div>
+</div>
 
-    <div class="weather-box">
-      <div class="weather-icon">💧</div>
-      <div id="humidity" class="weather-value">--</div>
-      <div class="weather-label">Humidity</div>
-    </div>
+<div class="weather-box">
+<div class="weather-icon">💧</div>
+<div id="humidity" class="weather-value">--</div>
+<div class="weather-label">Humidity</div>
+</div>
 
-    <div class="weather-box">
-      <div class="weather-icon">🌧️</div>
-      <div id="rain" class="weather-value">--</div>
-      <div class="weather-label">Rain</div>
-    </div>
+<div class="weather-box">
+<div class="weather-icon">🌧️</div>
+<div id="rain" class="weather-value">--</div>
+<div class="weather-label">Rain</div>
+</div>
 
-    <div class="weather-box">
-      <div class="weather-icon">💨</div>
-      <div id="wind" class="weather-value">--</div>
-      <div class="weather-label">Wind</div>
-    </div>
+<div class="weather-box">
+<div class="weather-icon">💨</div>
+<div id="wind" class="weather-value">--</div>
+<div class="weather-label">Wind</div>
+</div>
 
-  </div>
+</div>
 
-  <div id="weatherStatus" class="small" style="margin-top:14px;">
-    Loading live weather...
-  </div>
+<div id="weatherStatus"
+class="small"
+style="margin-top:14px;">
+Loading live weather...
+</div>
 
 </div>
 
 
-<!-- RISK STATUS -->
-<h2 class="section-title">⚠️ Risk Status</h2>
+<!-- EARLY WARNING -->
 
-<div class="card">
+<h2 class="section-title">
+🚨 Early Warning System
+</h2>
 
-  <div class="status">
+<div id="warningCard"
+class="card warning-card">
 
-    <div class="status-dot"></div>
+<div class="warning-header">
 
-    <div>
-      <h3 id="riskTitle">MONITORING</h3>
-      <p id="riskText" class="small">
-        D-Guard AI is monitoring available weather and government alert data.
-      </p>
-    </div>
+<div class="warning-icon">
+🟢
+</div>
 
-  </div>
+<div>
+
+<div id="warningTitle"
+class="warning-title"
+style="color:#16733c;">
+LOW RISK
+</div>
+
+<div class="small">
+Joshimath monitoring status
+</div>
+
+</div>
+
+</div>
+
+<div id="warningText"
+class="warning-text">
+
+No immediate warning detected from the currently available
+weather data. Continue monitoring official government alerts.
+
+</div>
+
+<div class="risk-bar">
+
+<div id="riskFill"
+class="risk-fill">
+</div>
+
+</div>
+
+<div id="riskLevel"
+class="risk-level"
+style="color:#16733c;">
+
+Risk Score: 0 / 100
+
+</div>
+
+<p class="small" style="margin-top:10px;">
+
+⚠️ This is an early-warning indicator based on available
+real-time data. It does not predict the exact time of a disaster.
+
+</p>
 
 </div>
 
 
 <!-- GOVERNMENT ALERTS -->
-<h2 class="section-title">🚨 Government Alerts</h2>
+
+<h2 class="section-title">
+🏛️ Government Alerts
+</h2>
 
 <div class="card">
 
-  <div class="alert-head">
-    <div>
-      <h3>NDMA SACHET</h3>
-      <p class="small">
-        Official disaster alert feed
-      </p>
-    </div>
+<div class="alert-head">
 
-    <div class="live-badge">
-      ● LIVE FEED
-    </div>
-  </div>
+<div>
 
-  <div id="alertList">
-    <div class="loading">
-      Loading official government alerts...
-    </div>
-  </div>
+<h3>NDMA SACHET</h3>
+
+<p class="small">
+Official disaster alert feed
+</p>
+
+</div>
+
+<div class="live-badge">
+● LIVE FEED
+</div>
+
+</div>
+
+<div id="alertList">
+
+<div class="loading">
+Loading official government alerts...
+</div>
+
+</div>
 
 </div>
 
 
 <!-- MAP -->
-<h2 class="section-title">🗺️ Joshimath Monitoring Map</h2>
+
+<h2 class="section-title">
+🗺️ Joshimath Monitoring Map
+</h2>
 
 <div class="card">
 
-  <div id="joshimathMap" class="map"></div>
+<div id="joshimathMap"
+class="map">
+</div>
 
-  <p class="small" style="margin-top:10px;">
-    Interactive monitoring map centered on Joshimath.
-    Government alert information is shown separately when available.
-  </p>
+<p class="small"
+style="margin-top:10px;">
+
+Interactive map centered on Joshimath.
+
+</p>
 
 </div>
 
 
-<!-- REPORT -->
-<h2 class="section-title">📝 Report a Disaster</h2>
+<!-- DISASTER REPORT -->
+
+<h2 class="section-title">
+📝 Report a Disaster
+</h2>
 
 <div class="card">
 
-  <form id="reportForm">
+<form id="reportForm">
 
-    <div class="form-group">
-      <label>Incident Type</label>
+<div class="form-group">
 
-      <select id="incidentType" required>
-        <option value="">Select incident</option>
-        <option>Landslide</option>
-        <option>Land Crack</option>
-        <option>Flood</option>
-        <option>Heavy Rain</option>
-        <option>Building Damage</option>
-        <option>Road Block</option>
-        <option>Other</option>
-      </select>
-    </div>
+<label>
+Incident Type
+</label>
+
+<select id="incidentType" required>
+
+<option value="">
+Select incident
+</option>
+
+<option>
+Landslide
+</option>
+
+<option>
+Land Crack
+</option>
+
+<option>
+Flood
+</option>
+
+<option>
+Heavy Rain
+</option>
+
+<option>
+Building Damage
+</option>
+
+<option>
+Road Block
+</option>
+
+<option>
+Other
+</option>
+
+</select>
+
+</div>
 
 
-    <div class="form-group">
-      <label>Location</label>
+<div class="form-group">
 
-      <input
-        id="reportLocation"
-        type="text"
-        placeholder="Enter location"
-        required>
-    </div>
+<label>
+Location
+</label>
 
+<input
+id="reportLocation"
+type="text"
+placeholder="Enter location"
+required>
 
-    <div class="form-group">
-      <label>Description</label>
-
-      <textarea
-        id="description"
-        placeholder="Describe the incident..."
-        required></textarea>
-    </div>
+</div>
 
 
-    <button class="submit" type="submit">
-      Submit Disaster Report
-    </button>
+<div class="form-group">
 
-  </form>
+<label>
+Description
+</label>
 
-  <div id="reportMessage" style="margin-top:12px;"></div>
+<textarea
+id="description"
+placeholder="Describe the incident..."
+required>
+</textarea>
+
+</div>
+
+
+<button
+class="submit"
+type="submit">
+
+Submit Disaster Report
+
+</button>
+
+</form>
+
+<div id="reportMessage"
+style="margin-top:12px;">
+</div>
 
 </div>
 
 
 <!-- EMERGENCY -->
-<h2 class="section-title">📞 Emergency Help</h2>
+
+<h2 class="section-title">
+📞 Emergency Help
+</h2>
 
 <div class="card">
 
-  <div class="emergency-grid">
+<div class="emergency-grid">
 
-    <a class="emergency call112" href="tel:112">
-      📞 Call 112
-    </a>
+<a
+class="emergency call112"
+href="tel:112">
 
-    <a class="emergency call1070" href="tel:1070">
-      📞 Call 1070
-    </a>
+📞 Call 112
 
-  </div>
+</a>
 
-  <p class="small" style="margin-top:12px;">
-    112: National Emergency Number<br>
-    1070: Uttarakhand Disaster Management Emergency Number
-  </p>
+<a
+class="emergency call1070"
+href="tel:1070">
+
+📞 Call 1070
+
+</a>
+
+</div>
+
+<p class="small"
+style="margin-top:12px;">
+
+112: National Emergency Number<br>
+1070: Uttarakhand Disaster Management Emergency Number
+
+</p>
 
 </div>
 
 
 <!-- SAFETY TIPS -->
-<h2 class="section-title">🛟 Safety Tips</h2>
+
+<h2 class="section-title">
+🛟 Safety Tips
+</h2>
 
 <div class="card">
 
-  <div class="tips">
+<div class="tips">
 
-    <div class="tip">
-      🏠 Stay away from visibly damaged buildings.
-    </div>
+<div class="tip">
+🏠 Stay away from visibly damaged buildings.
+</div>
 
-    <div class="tip">
-      🌧️ During heavy rain, avoid unstable slopes and river channels.
-    </div>
+<div class="tip">
+🌧️ During heavy rain, avoid unstable slopes and river channels.
+</div>
 
-    <div class="tip">
-      🚨 Follow official government warnings.
-    </div>
+<div class="tip">
+🚨 Follow official government warnings.
+</div>
 
-    <div class="tip">
-      📱 Keep your phone charged during emergencies.
-    </div>
+<div class="tip">
+📱 Keep your phone charged during emergencies.
+</div>
 
-    <div class="tip">
-      🧳 Keep essential documents and emergency items ready.
-    </div>
+<div class="tip">
+🧳 Keep essential documents and emergency items ready.
+</div>
 
-    <div class="tip">
-      👨‍👩‍👧 Stay connected with family and local authorities.
-    </div>
+<div class="tip">
+👨‍👩‍👧 Stay connected with family and local authorities.
+</div>
 
-  </div>
+</div>
 
 </div>
 
 
 <div class="footer">
-  D-Guard AI<br>
-  BCA Disaster Management Project<br>
-  Weather: Open-Meteo • Government Alerts: NDMA SACHET
+
+D-Guard AI<br>
+BCA Disaster Management Project<br>
+Weather: Open-Meteo • Alerts: NDMA SACHET
+
 </div>
 
 </div>
 
 
 <!-- LEAFLET -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script
+src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
 
 
 <script>
 
-/* =========================================
-   1. JOSHIMATH LOCATION
-========================================= */
+/* ==========================================
+   LOCATION
+========================================== */
 
-const JOSHIMATH_LAT = 30.56;
-const JOSHIMATH_LON = 79.56;
+const LAT = 30.56;
+const LON = 79.56;
 
 
-/* =========================================
-   2. LIVE WEATHER - OPEN METEO
-========================================= */
+/* ==========================================
+   WEATHER
+========================================== */
 
 async function loadWeather(){
 
-  const weatherStatus =
-    document.getElementById("weatherStatus");
+try{
 
-  try{
+const response =
+await fetch(
 
-    const url =
-      "https://api.open-meteo.com/v1/forecast" +
-      "?latitude=" + JOSHIMATH_LAT +
-      "&longitude=" + JOSHIMATH_LON +
-      "&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m" +
-      "&timezone=Asia%2FKolkata";
+"https://api.open-meteo.com/v1/forecast" +
 
-    const response = await fetch(url);
+"?latitude=30.56" +
 
-    if(!response.ok){
-      throw new Error("Weather API failed");
-    }
+"&longitude=79.56" +
 
-    const data = await response.json();
+"&current=" +
 
-    const current = data.current;
+"temperature_2m," +
+"relative_humidity_2m," +
+"precipitation," +
+"wind_speed_10m" +
 
-    document.getElementById("temp").innerText =
-      current.temperature_2m + " °C";
+"&timezone=Asia%2FKolkata"
 
-    document.getElementById("humidity").innerText =
-      current.relative_humidity_2m + " %";
+);
 
-    document.getElementById("rain").innerText =
-      current.precipitation + " mm";
 
-    document.getElementById("wind").innerText =
-      current.wind_speed_10m + " km/h";
+if(!response.ok){
 
-    weatherStatus.innerText =
-      "✅ Live weather data received from Open-Meteo.";
-
-    weatherStatus.className = "small success";
-
-  }catch(error){
-
-    console.error(error);
-
-    weatherStatus.innerText =
-      "⚠️ Live weather could not be loaded right now.";
-
-    weatherStatus.className = "small error";
-
-  }
+throw new Error("Weather API error");
 
 }
+
+
+const data =
+await response.json();
+
+
+const current =
+data.current;
+
+
+/* SHOW WEATHER */
+
+document.getElementById("temp").innerText =
+current.temperature_2m + " °C";
+
+
+document.getElementById("humidity").innerText =
+current.relative_humidity_2m + " %";
+
+
+document.getElementById("rain").innerText =
+current.precipitation + " mm";
+
+
+document.getElementById("wind").innerText =
+current.wind_speed_10m + " km/h";
+
+
+document.getElementById("weatherStatus").innerText =
+"✅ Live weather data received from Open-Meteo.";
+
+
+/* CALCULATE RISK */
+
+calculateRisk(current);
+
+
+}
+
+catch(error){
+
+console.error(error);
+
+document.getElementById("weatherStatus").innerText =
+"⚠️ Live weather could not be loaded.";
+
+}
+
+}
+
+
+/* ==========================================
+   RISK CALCULATION
+========================================== */
+
+function calculateRisk(weather){
+
+let score = 0;
+
+
+/* HEAVY RAIN */
+
+if(weather.precipitation >= 2){
+score += 15;
+}
+
+if(weather.precipitation >= 5){
+score += 15;
+}
+
+if(weather.precipitation >= 10){
+score += 20;
+}
+
+
+/* HIGH WIND */
+
+if(weather.wind_speed_10m >= 30){
+score += 15;
+}
+
+if(weather.wind_speed_10m >= 50){
+score += 20;
+}
+
+
+/* HIGH HUMIDITY */
+
+if(weather.relative_humidity_2m >= 90){
+score += 10;
+}
+
+
+/* LIMIT SCORE */
+
+if(score > 100){
+score = 100;
+}
+
+
+updateRisk(score);
+
+}
+
+
+/* ==========================================
+   UPDATE RISK UI
+========================================== */
+
+function updateRisk(score){
+
+const title =
+document.getElementById("warningTitle");
+
+const text =
+document.getElementById("warningText");
+
+const icon =
+document.querySelector(".warning-icon");
+
+const fill =
+document.getElementById("riskFill");
+
+const level =
+document.getElementById("riskLevel");
+
+
+fill.style.width =
+score + "%";
+
+
+if(score < 25){
+
+icon.innerText = "🟢";
+
+title.innerText =
+"LOW RISK";
+
+title.style.color =
+"#16733c";
+
+fill.style.background =
+"#20a45a";
+
+level.innerText =
+"Risk Score: " + score + " / 100";
+
+level.style.color =
+"#16733c";
+
+text.innerText =
+"No immediate weather-based warning detected. Continue monitoring official government alerts.";
+
+}
+
+
+else if(score < 50){
+
+icon.innerText = "🟡";
+
+title.innerText =
+"WATCH";
+
+title.style.color =
+"#9a6800";
+
+fill.style.background =
+"#e0a000";
+
+level.innerText =
+"Risk Score: " + score + " / 100";
+
+level.style.color =
+"#9a6800";
+
+text.innerText =
+"Weather conditions require increased monitoring. Stay updated with official warnings.";
+
+}
+
+
+else if(score < 75){
+
+icon.innerText = "🟠";
+
+title.innerText =
+"HIGH RISK";
+
+title.style.color =
+"#c76500";
+
+fill.style.background =
+"#f07800";
+
+level.innerText =
+"Risk Score: " + score + " / 100";
+
+level.style.color =
+"#c76500";
+
+text.innerText =
+"Weather conditions may increase disaster risk. Avoid unsafe areas and monitor official alerts.";
+
+}
+
+
+else{
+
+icon.innerText = "🔴";
+
+title.innerText =
+"CRITICAL";
+
+title.style.color =
+"#c52d2d";
+
+fill.style.background =
+"#d73535";
+
+level.innerText =
+"Risk Score: " + score + " / 100";
+
+level.style.color =
+"#c52d2d";
+
+text.innerText =
+"Critical conditions detected by the current risk model. Follow official emergency instructions immediately.";
+
+}
+
+}
+
 
 loadWeather();
 
 
-/* =========================================
-   3. INTERACTIVE LEAFLET MAP
-========================================= */
+/* Refresh weather every 10 minutes */
 
-const map =
-  L.map("joshimathMap")
-   .setView([JOSHIMATH_LAT,JOSHIMATH_LON],13);
-
-
-L.tileLayer(
-  "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-  {
-    maxZoom:19,
-    attribution:"© OpenStreetMap contributors"
-  }
-).addTo(map);
-
-
-const joshimathMarker =
-  L.marker([JOSHIMATH_LAT,JOSHIMATH_LON])
-   .addTo(map);
-
-
-joshimathMarker.bindPopup(
-  "<b>📍 Joshimath</b><br>" +
-  "Uttarakhand<br>" +
-  "D-Guard AI Monitoring Area"
+setInterval(
+loadWeather,
+10 * 60 * 1000
 );
 
 
-/* =========================================
-   4. NDMA SACHET RSS
-========================================= */
+/* ==========================================
+   MAP
+========================================== */
 
-/*
-   Official NDMA SACHET India RSS feed.
+const map =
+L.map("joshimathMap")
+.setView([LAT,LON],13);
 
-   IMPORTANT:
-   This app does NOT create fake alerts.
 
-   It tries to read the official feed.
-   If the browser blocks direct RSS access,
-   the app will show a clear message instead
-   of inventing an alert.
-*/
+L.tileLayer(
+"https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+{
+
+maxZoom:19,
+
+attribution:
+"© OpenStreetMap contributors"
+
+}
+).addTo(map);
+
+
+const marker =
+L.marker([LAT,LON])
+.addTo(map);
+
+
+marker.bindPopup(
+"<b>📍 Joshimath</b><br>" +
+"Uttarakhand<br>" +
+"D-Guard AI Monitoring Area"
+);
+
+
+/* ==========================================
+   NDMA ALERT FEED
+========================================== */
 
 const NDMA_RSS =
-  "https://sachet.ndma.gov.in/cap_public_website/rss/rss_india.xml";
+"https://sachet.ndma.gov.in/cap_public_website/rss/rss_india.xml";
 
 
 function escapeHTML(text){
 
-  const div = document.createElement("div");
+const div =
+document.createElement("div");
 
-  div.textContent = text || "";
+div.textContent =
+text || "";
 
-  return div.innerHTML;
-
-}
-
-
-function isRelevantAlert(text){
-
-  const value =
-    (text || "").toLowerCase();
-
-  const keywords = [
-
-    "uttarakhand",
-    "joshimath",
-    "chamoli",
-    "pauri",
-    "rudraprayag",
-    "tehri",
-    "pithoragarh",
-    "bageshwar",
-    "almora",
-    "nainital",
-    "dehradun",
-    "haridwar",
-    "udham singh nagar",
-    "uttarkashi"
-
-  ];
-
-  return keywords.some(
-    word => value.includes(word)
-  );
+return div.innerHTML;
 
 }
 
 
-function getAlertClass(text){
+function relevantAlert(text){
 
-  const value =
-    (text || "").toLowerCase();
+const value =
+(text || "").toLowerCase();
 
-  if(
-    value.includes("flood") ||
-    value.includes("landslide") ||
-    value.includes("severe") ||
-    value.includes("cyclone")
-  ){
 
-    return "danger";
+const keywords = [
 
-  }
+"uttarakhand",
+"joshimath",
+"chamoli",
+"rudraprayag",
+"tehri",
+"pithoragarh",
+"bageshwar",
+"almora",
+"nainital",
+"dehradun",
+"uttarkashi"
 
-  if(
-    value.includes("thunderstorm") ||
-    value.includes("lightning") ||
-    value.includes("heavy rain")
-  ){
+];
 
-    return "warning";
 
-  }
-
-  return "";
+return keywords.some(
+keyword =>
+value.includes(keyword)
+);
 
 }
 
 
 async function loadNDMAAlerts(){
 
-  const alertList =
-    document.getElementById("alertList");
+const box =
+document.getElementById("alertList");
 
-  alertList.innerHTML =
-    '<div class="loading">Connecting to NDMA SACHET...</div>';
 
+box.innerHTML =
+'<div class="loading">' +
+'Connecting to NDMA SACHET...' +
+'</div>';
 
-  try{
 
-    const response =
-      await fetch(NDMA_RSS,{
-        method:"GET",
-        cache:"no-store"
-      });
+try{
 
+const response =
+await fetch(
+NDMA_RSS,
+{
+cache:"no-store"
+}
+);
 
-    if(!response.ok){
 
-      throw new Error(
-        "NDMA RSS request failed"
-      );
+if(!response.ok){
 
-    }
+throw new Error(
+"NDMA feed unavailable"
+);
 
+}
 
-    const xmlText =
-      await response.text();
 
+const xmlText =
+await response.text();
 
-    if(!xmlText){
 
-      throw new Error(
-        "Empty NDMA response"
-      );
+const parser =
+new DOMParser();
 
-    }
 
+const xml =
+parser.parseFromString(
+xmlText,
+"application/xml"
+);
 
-    const parser =
-      new DOMParser();
 
+const items =
+Array.from(
+xml.querySelectorAll("item")
+);
 
-    const xml =
-      parser.parseFromString(
-        xmlText,
-        "application/xml"
-      );
 
+if(items.length === 0){
 
-    const parseError =
-      xml.querySelector("parsererror");
+box.innerHTML =
+'<div class="alert-box">' +
+'<div class="alert-title">' +
+'No current alerts found' +
+'</div>' +
+'<div class="small">' +
+'No alert items were returned by the official feed.' +
+'</div>' +
+'</div>';
 
+return;
 
-    if(parseError){
+}
 
-      throw new Error(
-        "Could not read NDMA RSS"
-      );
 
-    }
+const alerts = [];
 
 
-    const items =
-      Array.from(
-        xml.querySelectorAll("item")
-      );
+items.forEach(item => {
 
+const title =
+item.querySelector("title")
+?.textContent || "";
 
-    if(items.length === 0){
 
-      alertList.innerHTML =
-        '<div class="alert-box">' +
-        '<div class="alert-title">' +
-        'No current alert items found' +
-        '</div>' +
-        '<div class="small">' +
-        'No alert item was returned by the official NDMA RSS feed.' +
-        '</div>' +
-        '</div>';
+const description =
+item.querySelector("description")
+?.textContent || "";
 
-      return;
 
-    }
+const date =
+item.querySelector("pubDate")
+?.textContent || "";
 
 
-    const relevant = [];
+const combined =
+title + " " + description;
 
 
-    items.forEach(item => {
+if(
+relevantAlert(combined)
+){
 
-      const title =
-        item.querySelector("title")?.textContent || "";
+alerts.push({
+title,
+description,
+date
+});
 
-      const description =
-        item.querySelector("description")?.textContent || "";
+}
 
-      const pubDate =
-        item.querySelector("pubDate")?.textContent || "";
+});
 
-      const link =
-        item.querySelector("link")?.textContent || "";
 
-      const combined =
-        title + " " + description;
+if(alerts.length === 0){
 
+box.innerHTML =
+'<div class="alert-box success">' +
 
-      if(isRelevantAlert(combined)){
+'<div class="alert-title">' +
+'🟢 No matching Uttarakhand alert found' +
+'</div>' +
 
-        relevant.push({
-          title:title,
-          description:description,
-          pubDate:pubDate,
-          link:link
-        });
+'<div class="small">' +
+'The official NDMA feed was checked, but no current matching alert was found.' +
+'</div>' +
 
-      }
+'</div>';
 
-    });
+return;
 
+}
 
-    if(relevant.length === 0){
 
-      alertList.innerHTML =
-        '<div class="alert-box success">' +
-        '<div class="alert-title">' +
-        'No Uttarakhand-area alert matched' +
-        '</div>' +
-        '<div class="small">' +
-        'The official NDMA feed was checked, but no current alert item matching the monitored Uttarakhand/Joshimath-area keywords was found.' +
-        '</div>' +
-        '</div>';
+box.innerHTML = "";
 
-      return;
 
-    }
+alerts.slice(0,10)
+.forEach(alert => {
 
+const item =
+document.createElement("div");
 
-    alertList.innerHTML = "";
 
+item.className =
+"alert-box";
 
-    relevant.slice(0,10).forEach(alert => {
 
-      const box =
-        document.createElement("div");
+item.innerHTML =
 
-      box.className =
-        "alert-box " +
-        getAlertClass(
-          alert.title + " " +
-          alert.description
-        );
+'<div class="alert-title">' +
 
+'🚨 ' +
 
-      const safeTitle =
-        escapeHTML(alert.title);
+escapeHTML(
+alert.title
+) +
 
+'</div>' +
 
-      const safeDescription =
-        escapeHTML(
-          alert.description
-            .replace(/<[^>]*>/g,"")
-            .slice(0,350)
-        );
+'<div class="small">' +
 
+escapeHTML(
+alert.description
+.replace(/<[^>]*>/g,"")
+.slice(0,400)
+) +
 
-      const safeDate =
-        escapeHTML(alert.pubDate);
+'</div>' +
 
+'<div class="alert-meta">' +
 
-      box.innerHTML =
+'Source: NDMA SACHET' +
 
-        '<div class="alert-title">' +
-        '🚨 ' + safeTitle +
-        '</div>' +
+(alert.date ?
+" • " +
+escapeHTML(alert.date)
+:
+"") +
 
-        '<div class="small">' +
-        safeDescription +
-        '</div>' +
+'</div>';
 
-        '<div class="alert-meta">' +
-        'Source: NDMA SACHET' +
-        (safeDate ?
-          ' • ' + safeDate :
-          '') +
-        '</div>';
 
+box.appendChild(item);
 
-      alertList.appendChild(box);
+});
 
-    });
 
+}
 
-  }catch(error){
+catch(error){
 
-    console.error(
-      "NDMA feed error:",
-      error
-    );
+console.error(error);
 
 
-    alertList.innerHTML =
+box.innerHTML =
 
-      '<div class="alert-box error">' +
+'<div class="alert-box error">' +
 
-      '<div class="alert-title">' +
-      '⚠️ NDMA live feed could not be loaded' +
-      '</div>' +
+'<div class="alert-title">' +
 
-      '<div class="small">' +
-      'The app could not directly read the official SACHET RSS feed from this browser. No fake or estimated alert has been shown.' +
-      '</div>' +
+'⚠️ NDMA live feed unavailable'
 
-      '<div class="alert-meta">' +
-      'Official source: NDMA SACHET' +
-      '</div>' +
++ '</div>' +
 
-      '</div>';
+'<div class="small">' +
 
-  }
+'The browser could not directly read the official NDMA feed. No fake alert has been displayed.'
+
++ '</div>' +
+
+'</div>';
+
+}
 
 }
 
@@ -972,106 +1321,99 @@ async function loadNDMAAlerts(){
 loadNDMAAlerts();
 
 
-/* =========================================
-   5. REFRESH NDMA ALERTS
-========================================= */
+/* Refresh government alerts */
 
 setInterval(
-  loadNDMAAlerts,
-  5 * 60 * 1000
+loadNDMAAlerts,
+5 * 60 * 1000
 );
 
 
-/* =========================================
-   6. DISASTER REPORT
-========================================= */
+/* ==========================================
+   DISASTER REPORT
+========================================== */
 
 document
-  .getElementById("reportForm")
-  .addEventListener(
-    "submit",
-    function(event){
+.getElementById("reportForm")
+.addEventListener(
+"submit",
+function(event){
 
-      event.preventDefault();
-
-
-      const type =
-        document.getElementById(
-          "incidentType"
-        ).value;
+event.preventDefault();
 
 
-      const location =
-        document.getElementById(
-          "reportLocation"
-        ).value;
+const type =
+document.getElementById(
+"incidentType"
+).value;
 
 
-      const description =
-        document.getElementById(
-          "description"
-        ).value;
+const location =
+document.getElementById(
+"reportLocation"
+).value;
 
 
-      const message =
-        document.getElementById(
-          "reportMessage"
-        );
+const description =
+document.getElementById(
+"description"
+).value;
 
 
-      if(
-        !type ||
-        !location ||
-        !description
-      ){
-
-        message.innerHTML =
-          '<div class="alert-box error">' +
-          'Please fill all fields.' +
-          '</div>';
-
-        return;
-
-      }
+const message =
+document.getElementById(
+"reportMessage"
+);
 
 
-      /*
-        Current version:
-        Report is validated locally.
+if(
+!type ||
+!location ||
+!description
+){
 
-        A real database/backend can be
-        connected in the next stage.
-      */
+message.innerHTML =
+'<div class="alert-box error">' +
+'Please fill all fields.' +
+'</div>';
 
+return;
 
-      message.innerHTML =
-        '<div class="alert-box success">' +
-        '<b>✅ Report recorded locally.</b><br>' +
-        '<span class="small">' +
-        'Type: ' +
-        type +
-        '<br>' +
-        'Location: ' +
-        location +
-        '</span>' +
-        '</div>';
+}
 
 
-      document
-        .getElementById("reportForm")
-        .reset();
+message.innerHTML =
 
-    }
-  );
+'<div class="alert-box success">' +
+
+'<b>✅ Report recorded.</b><br>' +
+
+'<span class="small">' +
+
+"Type: " +
+escapeHTML(type) +
+
+"<br>" +
+
+"Location: " +
+escapeHTML(location)
+
++ '</span>' +
+
+'</div>';
 
 
-/* =========================================
-   7. MAP INVALIDATE SIZE
-========================================= */
+document
+.getElementById("reportForm")
+.reset();
+
+}
+);
+
 
 setTimeout(
-  () => map.invalidateSize(),
-  500
+() => map.invalidateSize(),
+500
 );
 
 </script>
