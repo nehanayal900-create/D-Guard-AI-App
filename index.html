@@ -408,46 +408,55 @@ Loading live weather...
 </div>
 
 </div>
-<!-- EMERGENCY SOUND CONTROLS -->
-<h2 class="section-title">🔊 Emergency Sound & Voice</h2>
-
-<div class="card">
-  <p class="small">
-    Sound browser ki permission par depend karta hai.
-    Ye prototype risk score par based hai, official warning system nahi.
-  </p>
-
-  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
-    <button type="button" id="enableSound"
-      style="background:#075b82;color:white;">
-      Enable Sound
-    </button>
-
-    <button type="button" id="testSiren"
-      style="background:#d73535;color:white;">
-      Test Siren
-    </button>
-
-    <button type="button" id="testVoice"
-      style="background:#087f8c;color:white;">
-      Test Hindi Voice
-    </button>
-
-    <button type="button" id="stopSiren"
-      style="background:#333;color:white;">
-      Stop Sound
-    </button>
-
-    <button type="button" id="simulateHighRisk"
-      style="background:#8b1e1e;color:white;">
-      Simulate High Risk (DEMO)
-    </button>
+  <!-- PROFESSIONAL EMERGENCY ALERT -->
+<section id="emergencyAlert" class="emergency-alert" hidden>
+  <div class="alert-indicator">
+    <span class="alert-dot"></span>
+    <span id="alertLevel">EMERGENCY ALERT</span>
   </div>
 
-  <p id="soundStatus" class="small" style="margin-top:12px;">
-    Sound disabled. Click Enable Sound to begin.
+  <h2 id="alertTitle">Disaster Warning</h2>
+  <p id="alertMessage">
+    Please follow the official safety instructions.
   </p>
-</div>
+
+  <button id="stopAlert" type="button">
+    Stop Sound
+  </button>
+</section>
+
+<style>
+.emergency-alert {
+  padding: 20px;
+  margin: 16px 0;
+  border-radius: 14px;
+  background: #7f1d1d;
+  color: #fff;
+  border: 1px solid #ef4444;
+}
+.emergency-alert h2 {
+  margin: 12px 0 8px;
+}
+.emergency-alert button {
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.alert-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+}
+.alert-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fca5a5;
+}
+</style>
 
 <!-- EARLY WARNING -->
 
