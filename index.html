@@ -348,7 +348,7 @@ button{
 
 <div class="header">
 
-<h1>🛡️ D-Guard AI</h1>
+<h1>🛡️ RISK MANAGEMENT</h1> <p>Smart Disaster Awareness &amp; Risk Management</p>
 
 <p>
 Disaster Management & Risk Monitoring System
@@ -408,7 +408,46 @@ Loading live weather...
 </div>
 
 </div>
+<!-- EMERGENCY SOUND CONTROLS -->
+<h2 class="section-title">🔊 Emergency Sound & Voice</h2>
 
+<div class="card">
+  <p class="small">
+    Sound browser ki permission par depend karta hai.
+    Ye prototype risk score par based hai, official warning system nahi.
+  </p>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+    <button type="button" id="enableSound"
+      style="background:#075b82;color:white;">
+      Enable Sound
+    </button>
+
+    <button type="button" id="testSiren"
+      style="background:#d73535;color:white;">
+      Test Siren
+    </button>
+
+    <button type="button" id="testVoice"
+      style="background:#087f8c;color:white;">
+      Test Hindi Voice
+    </button>
+
+    <button type="button" id="stopSiren"
+      style="background:#333;color:white;">
+      Stop Sound
+    </button>
+
+    <button type="button" id="simulateHighRisk"
+      style="background:#8b1e1e;color:white;">
+      Simulate High Risk (DEMO)
+    </button>
+  </div>
+
+  <p id="soundStatus" class="small" style="margin-top:12px;">
+    Sound disabled. Click Enable Sound to begin.
+  </p>
+</div>
 
 <!-- EARLY WARNING -->
 
@@ -830,6 +869,232 @@ document.getElementById("weatherStatus").innerText =
 /* ==========================================
    RISK CALCULATION
 ========================================== */
+  /* EMERGENCY SOUND AND HINDI VOICE */
+
+let soundEnabled = false;
+let sirenTimer = null;
+let sirenOscillator = null;
+let audioContext = null;
+let lastSoundLevel = "LOW";
+let demoMode = false;
+
+function setSoundStatus(message) {
+  document.getElementById("soundStatus").textContent = message;
+}
+
+function stopSiren() {
+  if (sirenTimer) {
+    clearInterval(sirenTimer);
+    sirenTimer = null;
+  }
+
+  if (sirenOscillator) {
+    try {
+      sirenOscillator.stop();
+    } catch (error) {}
+
+    sirenOscillator = null;
+  }
+
+  setSoundStatus("Sound stopped. The risk warning remains visible.");
+}
+
+async function enableEmergencySound() {
+  try {
+    const AudioContextClass =
+      window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContextClass) {
+      throw new Error("Audio is not supported in this browser.");
+    }
+
+    if (!audioContext) {
+      audioContext = new AudioContextClass();
+    }
+
+    await audioContext.resume();
+    soundEnabled = true;
+
+    setSoundStatus("Sound enabled. Emergency audio is ready.");
+  } catch (error) {
+    setSoundStatus("Sound could not start. Check browser permissions.");
+  }
+}
+
+function playSiren() {
+  if (!soundEnabled || !audioContext) {
+    setSoundStatus("Click Enable Sound first.");
+    return;
+  }
+
+  stopSiren();
+
+  try {
+    sirenOscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    sirenOscillator.type = "sawtooth";
+    sirenOscillator.frequency.value = 700;
+    gain.gain.value = 0.035;
+
+    sirenOscillator.connect(gain);
+    gain.connect(audioContext.destination);
+    sirenOscillator.start();
+
+    let highTone = false;
+
+    sirenTimer = setInterval(() => {
+      if (!sirenOscillator || !audioContext) return;
+
+      highTone = !highTone;
+      sirenOscillator.frequency.setTargetAtTime(
+        highTone ? 950 : 650,
+        audioContext.currentTime,
+        0.05
+      );
+    }, 500);
+
+    setSoundStatus("Siren playing. Click Stop Sound to stop it.");
+  } catch (error) {
+    setSoundStatus("Could not play the siren.");
+  }
+}
+
+function playWarningTone() {
+  if (!soundEnabled || !audioContext) return;
+
+  try {
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    oscillator.frequency.value = 600;
+    gain.gain.value = 0.025;
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    oscillator.start();
+
+    gain.gain.setTargetAtTime(
+      0,
+      audioContext.currentTime + 0.3,
+      0.1
+    );
+
+    oscillator.stop(audioContext.currentTime + 0.8);
+  } catch (error) {
+    console.error("Warning tone failed:", error);
+  }
+}
+
+function speakHindiWarning() {
+  if (!("speechSynthesis" in window)) {
+    setSoundStatus("Hindi voice is not supported in this browser.");
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+
+  const message = new SpeechSynthesisUtterance(
+    "सावधान! जोखिम का स्तर बढ़ गया है। सुरक्षित स्थान पर जाएँ। " +
+    "भूस्खलन वाले ढलानों और नदी के किनारों से दूर रहें। " +
+    "आधिकारिक आपदा चेतावनियों का पालन करें।"
+  );
+
+  message.lang = "hi-IN";
+  message.rate = 0.9;
+  message.volume = 1;
+
+  window.speechSynthesis.speak(message);
+}
+
+function handleRiskSound(score) {
+  if (demoMode || !soundEnabled) return;
+
+  const newLevel =
+    score >= 75 ? "CRITICAL" :
+    score >= 50 ? "HIGH" :
+    score >= 25 ? "MEDIUM" : "LOW";
+
+  // Avoid repeating the same warning on every weather refresh.
+  if (newLevel === lastSoundLevel) return;
+
+  lastSoundLevel = newLevel;
+
+  if (newLevel === "CRITICAL" || newLevel === "HIGH") {
+    playSiren();
+    speakHindiWarning();
+  } else if (newLevel === "MEDIUM") {
+    stopSiren();
+    playWarningTone();
+  } else {
+    stopSiren();
+  }
+}
+
+document.getElementById("enableSound").addEventListener(
+  "click",
+  enableEmergencySound
+);
+
+document.getElementById("testSiren").addEventListener(
+  "click",
+  () => {
+    if (!soundEnabled) {
+      setSoundStatus("Click Enable Sound first.");
+      return;
+    }
+
+    playSiren();
+  }
+);
+
+document.getElementById("testVoice").addEventListener(
+  "click",
+  () => {
+    if (!soundEnabled) {
+      setSoundStatus("Click Enable Sound first.");
+      return;
+    }
+
+    speakHindiWarning();
+  }
+);
+
+document.getElementById("stopSiren").addEventListener(
+  "click",
+  () => {
+    stopSiren();
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+  }
+);
+
+document.getElementById("simulateHighRisk").addEventListener(
+  "click",
+  () => {
+    demoMode = true;
+    stopSiren();
+
+    document.getElementById("warningTitle").textContent =
+      "DEMO ALERT — NOT A REAL EMERGENCY";
+
+    document.getElementById("warningText").textContent =
+      "This is a simulated high-risk demonstration. " +
+      "It is not an official disaster warning.";
+
+    document.getElementById("riskLevel").textContent =
+      "DEMO MODE — Risk score not based on a real alert";
+
+    if (soundEnabled) {
+      playSiren();
+      speakHindiWarning();
+    } else {
+      setSoundStatus("Demo shown. Enable sound to test audio.");
+    }
+  }
+);
 
 function calculateRisk(weather){
 
@@ -929,7 +1194,7 @@ level.style.color =
 text.innerText =
 "No immediate weather-based warning detected. Continue monitoring official government alerts.";
 
-}
+handleRiskSound(score);}
 
 
 else if(score < 50){
