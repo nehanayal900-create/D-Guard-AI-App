@@ -10,19 +10,25 @@ body{
   font-family:Arial,sans-serif;
   background:#f1f5f9;
   color:#172033;
-}      
+}
+
 header{
   background:#172033;
   color:white;
   padding:20px;
   text-align:center;
 }
-header h1{margin:0;}
+
+header h1{
+  margin:0;
+}
+
 .container{
   max-width:900px;
   margin:auto;
   padding:20px;
 }
+
 .card{
   background:white;
   padding:20px;
@@ -30,21 +36,25 @@ header h1{margin:0;}
   border-radius:15px;
   box-shadow:0 3px 10px #0002;
 }
+
 .weather{
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:10px;
 }
+
 .box{
   padding:15px;
   background:#eef2ff;
   border-radius:10px;
 }
+
 .alert{
   background:#fff3cd;
   padding:15px;
   border-radius:10px;
 }
+
 button{
   padding:12px 20px;
   border:0;
@@ -68,8 +78,9 @@ button{
 <p>Real-time disaster monitoring dashboard</p>
 </div>
 
+<!-- LIVE WEATHER -->
 <div class="card">
-<h2>🌦️ Live Weather</h2>
+<h2>🌦️ Live Weather — Joshimath</h2>
 
 <div class="weather">
 
@@ -94,182 +105,229 @@ button{
 </div>
 
 </div>
+
+<p id="weatherCondition">Checking current weather...</p>
+
 </div>
 
+<!-- RISK STATUS -->
 <div class="card">
 <h2>🚨 Risk Status</h2>
-  <div class="card">
-  <h2>📝 Report a Disaster</h2>
 
-  <input id="name" placeholder="Your name"><br><br>
-
-  <select id="type">
-    <option>Heavy Rain</option>
-    <option>Landslide</option>
-    <option>Flood</option>
-    <option>Earthquake</option>
-    <option>Other</option>
-  </select><br><br>
-
-  <textarea id="message" placeholder="Describe the problem"></textarea><br><br>
-
-  <button onclick="submitReport()">Submit Report</button>
-
-  <p id="result"></p>
-</div>
-
-<script>
-function submitReport() {
-  let name = document.getElementById("name").value;
-  let type = document.getElementById("type").value;
-  let message = document.getElementById("message").value;
-
-  if (name === "" || message === "") {
-    document.getElementById("result").innerText =
-      "Please fill all required details.";
-    return;
-  }
-
-  document.getElementById("result").innerText =
-    "✅ Report submitted successfully!";
-}
-const riskStatus = document.getElementById("riskStatus");
-
-if (riskStatus) {
-  riskStatus.innerText = "🟡 RISK STATUS: MONITORING";
-}
-const reportButton = document.querySelector("button");
-
-if (reportButton) {
-  reportButton.addEventListener("click", function() {
-    const name = document.getElementById("name");
-    const result = document.getElementById("result");
-
-    if (name && name.value.trim() !== "") {
-      result.innerText = "✅ Report submitted successfully!";
-    } else {
-      result.innerText = "⚠️ Please enter your name.";
-    }
-  });
-}
-</script>
-  
-  <div class="alert">
+<div class="alert">
 <b id="riskStatus">🟡 RISK STATUS: MONITORING</b>
+
 <p>Joshimath area is being monitored using live weather data.</p>
-<p><b>Note:</b> This is an informational risk indicator, not an official government warning.</p>
-</div>
+
+<p>
+<b>Note:</b> This is an informational risk indicator,
+not an official government warning.
+</p>
 </div>
 
+</div>
+
+<!-- REPORT -->
 <div class="card">
+
+<h2>📝 Report a Disaster</h2>
+
+<input id="name" placeholder="Your name">
+<br><br>
+
+<select id="type">
+<option>Heavy Rain</option>
+<option>Landslide</option>
+<option>Flood</option>
+<option>Earthquake</option>
+<option>Other</option>
+</select>
+
+<br><br>
+
+<textarea id="message" placeholder="Describe the problem"></textarea>
+
+<br><br>
+
+<button onclick="submitReport()">Submit Report</button>
+
+<p id="result"></p>
+
+</div>
+
+<!-- EMERGENCY -->
+<div class="card">
+
 <h2>📞 Emergency Help</h2>
-<p>Emergency: <a href="tel:112"><b>📞 112</b></a></p>
-<p>Disaster Management: <a href="tel:1070"><b>📞 1070</b></a></p>
-</div>
+
+<p>
+Emergency:
+<a href="tel:112"><b>📞 112</b></a>
+</p>
+
+<p>
+Disaster Management:
+<a href="tel:1070"><b>📞 1070</b></a>
+</p>
 
 </div>
 
-<script>
-fetch("https://api.open-meteo.com/v1/forecast?latitude=30.56&longitude=79.56&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m")
-
-.then(response => response.json())
-
-.then(data => {
-
-let w = data.current;
-
-document.getElementById("temp").innerText =
-w.temperature_2m + " °C";
-
-document.getElementById("humidity").innerText =
-w.relative_humidity_2m + " %";    
-
-document.getElementById("rain").innerText =
-w.precipitation + " mm";
-
-document.getElementById("wind").innerText =
-w.wind_speed_10m + " km/h";
-
-})
-
-.catch(() => {
-
-document.getElementById("temp").innerText = "Unavailable";
-document.getElementById("humidity").innerText = "Unavailable";
-document.getElementById("rain").innerText = "Unavailable";
-document.getElementById("wind").innerText = "Unavailable";
-
-});
-  
-const alertStatus = document.getElementById("alertStatus");
-
-alertStatus.innerText =
-  "⚠️ Live disaster alert source will be connected here.";
-const alertStatus = document.getElementById("alertStatus");
-
-alertStatus.innerText =
-  "⚠️ Live disaster alert source will be connected here.";
-</script>
+<!-- ALERT -->
 <div class="card">
-  <p id="alertStatus">Checking latest alerts...</p>
+
+<h2>🚨 Government Alert Source</h2>
+
+<p id="alertStatus">
+NDMA SACHET alert source connected.
+</p>
+
 </div>
+
+<!-- MAP -->
 <h2>🗺️ Joshimath Map</h2>
 
 <div class="card">
-  <iframe
-    src="https://www.openstreetmap.org/export/embed.html?bbox=79.52%2C30.52%2C79.60%2C30.59&layer=mapnik&marker=30.56%2C30.56"
-    width="100%"
-    height="300"
-    style="border:1px solid #ccc; border-radius:10px;">
-  </iframe>
+
+<iframe
+src="https://www.openstreetmap.org/export/embed.html?bbox=79.52%2C30.52%2C79.60%2C30.59&layer=mapnik&marker=30.56%2C79.56"
+width="100%"
+height="300"
+style="border:1px solid #ccc;border-radius:10px;">
+</iframe>
+
 </div>
+
+<!-- SAFETY TIPS -->
 <h2>🛡️ Safety Tips</h2>
 
 <div class="card">
-  <h3>🌧️ Heavy Rain</h3>
-  <p>• सुरक्षित जगह पर रहें।</p>
-  <p>• तेज बहाव वाले पानी से दूर रहें।</p>
+
+<h3>🌧️ Heavy Rain</h3>
+
+<p>• सुरक्षित जगह पर रहें।</p>
+<p>• तेज बहाव वाले पानी से दूर रहें।</p>
+
 </div>
 
 <div class="card">
-  <h3>⛰️ Landslide</h3>
-  <p>• पहाड़ी ढलानों और कमजोर जगहों से दूर रहें।</p>
-  <p>• पत्थर गिरने वाले क्षेत्रों में न जाएँ।</p>
+
+<h3>⛰️ Landslide</h3>
+
+<p>• पहाड़ी ढलानों और कमजोर जगहों से दूर रहें।</p>
+<p>• पत्थर गिरने वाले क्षेत्रों में न जाएँ।</p>
+
 </div>
 
 <div class="card">
-  <h3>🌎 Earthquake</h3>
-  <p>• शांत रहें और मजबूत जगह पर सुरक्षित रहें।</p>
-  <p>• बिजली और गैस की स्थिति सुरक्षित होने पर जाँचें।</p>
-</div>
-  <div id="weather">
-  Loading Joshimath live weather...
-</div>
-  <script>
-async function loadWeather() {
-  const weather = document.getElementById("weather");
 
-  try {
+<h3>🌎 Earthquake</h3>
+
+<p>• शांत रहें और मजबूत जगह पर सुरक्षित रहें।</p>
+<p>• बिजली और गैस की स्थिति सुरक्षित होने पर जाँचें।</p>
+
+</div>
+
+</div>
+
+<script>
+
+// ===============================
+// LIVE OPEN-METEO WEATHER
+// ===============================
+
+async function loadWeather(){
+
+  try{
+
     const response = await fetch(
       "https://api.open-meteo.com/v1/forecast?latitude=30.56&longitude=79.56&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code&timezone=Asia%2FKolkata"
     );
 
+    if(!response.ok){
+      throw new Error("Weather API error");
+    }
+
     const data = await response.json();
+
     const w = data.current;
 
-    weather.innerHTML = `
-      <h3>🌦️ LIVE WEATHER — JOSHIMATH</h3>
-      <p>🌡️ Temperature: ${w.temperature_2m}°C</p>
-      <p>💧 Humidity: ${w.relative_humidity_2m}%</p>
-      <p>🌧️ Precipitation: ${w.precipitation} mm</p>
-      <p>💨 Wind Speed: ${w.wind_speed_10m} km/h</p>
-    `;
-  } catch (error) {
-    weather.innerHTML = "Weather data unavailable.";
+    document.getElementById("temp").innerText =
+      w.temperature_2m + " °C";
+
+    document.getElementById("humidity").innerText =
+      w.relative_humidity_2m + " %";
+
+    document.getElementById("rain").innerText =
+      w.precipitation + " mm";
+
+    document.getElementById("wind").innerText =
+      w.wind_speed_10m + " km/h";
+
+    document.getElementById("weatherCondition").innerText =
+      "🌦️ Current weather data received from Open-Meteo.";
+
   }
+
+  catch(error){
+
+    document.getElementById("temp").innerText =
+      "Unavailable";
+
+    document.getElementById("humidity").innerText =
+      "Unavailable";
+
+    document.getElementById("rain").innerText =
+      "Unavailable";
+
+    document.getElementById("wind").innerText =
+      "Unavailable";
+
+    document.getElementById("weatherCondition").innerText =
+      "⚠️ Weather data unavailable.";
+
+  }
+
 }
 
+
+// ===============================
+// DISASTER REPORT
+// ===============================
+
+function submitReport(){
+
+  const name =
+    document.getElementById("name").value.trim();
+
+  const type =
+    document.getElementById("type").value;
+
+  const message =
+    document.getElementById("message").value.trim();
+
+  const result =
+    document.getElementById("result");
+
+  if(name === "" || message === ""){
+
+    result.innerText =
+      "⚠️ Please fill all required details.";
+
+    return;
+
+  }
+
+  result.innerText =
+    "✅ Report submitted successfully!";
+
+}
+
+
+// START WEATHER
+
 loadWeather();
+
 </script>
+
 </body>
 </html>
