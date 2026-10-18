@@ -1,0 +1,10 @@
+{
+  "name": "Risk Management",
+  "short_name": "Risk Management",
+  "description": "Disaster Management and Risk Monitoring System for Joshimath, Uttarakhand",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0b1220",
+  "theme_color": "#0b1220",
+  "orientation": "portrait"
+}
